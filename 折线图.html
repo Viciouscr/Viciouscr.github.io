@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>折线图</title>
+    <style>
+        #C{
+            width: 612px;
+            margin: 30px auto;
+            text-align: center;
+
+        }
+        #C2{
+            height: 50px;
+            font-size: 25px;
+            line-height: 50px;
+            font-family: 微软雅黑;
+            text-align: center;
+            background: #a01f5c;
+            color: #e1e1e1;
+            margin: 0 auto;
+        }
+        #C1{
+            background: #FFFFFF;
+        }
+        body{
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+<div id="C">
+    <div id="C2">折 线 图</div>
+<canvas id="C1" width="610" height="510" style="border: 1px solid #FBFCE0">你的设备不支持图表数据显示</canvas>
+</div>
+</body>
+<script type="text/javascript">
+    let c=document.getElementById("C1");
+    let ctx=c.getContext("2d");
+    let data = [
+        {x: 100, y: 100},
+        {x: 200, y: 300},
+        {x: 300, y: 200},
+        {x: 400, y: 350},
+        {x: 430, y: 300},
+        {x: 450, y: 450}
+    ]
+    let len=data.length;
+    let x=0;
+    let y=0;
+
+    for(let i=0;i<100;i++)
+    {
+        ctx.beginPath()
+        ctx.moveTo(0,10*i);
+        ctx.lineTo(c.width,i*10);
+        ctx.strokeStyle='#C4CBF7'
+        ctx.stroke();
+        ctx.closePath()
+    }//绘制竖直网格线
+    for(let i=0;i<200;i++)
+    {
+        ctx.beginPath()
+        ctx.moveTo(i*10,0);
+        ctx.lineTo(i*10,c.height);
+        ctx.strokeStyle='#C4CBF7'
+        ctx.stroke();
+        ctx.closePath()
+    }//绘制水平网格线
+
+    // 绘制x轴(x,y) y屏幕中向下为正方向
+    ctx.beginPath();
+    ctx.moveTo(10,500);
+    ctx.lineTo(610,500);
+    ctx.lineTo(600,490);
+    ctx.moveTo(10,500);
+    ctx.lineTo(610,500);
+    ctx.lineTo(600,510);
+    ctx.strokeStyle="#394A84";
+    ctx.stroke();
+    ctx.closePath();
+
+    // 绘制y轴
+    ctx.beginPath();
+    ctx.moveTo(10,500);
+    ctx.lineTo(10,0);
+    ctx.lineTo(0,10);
+    ctx.moveTo(10,500);
+    ctx.lineTo(10,0);
+    ctx.lineTo(20,10);
+    ctx.strokeStyle="#394A84";
+    ctx.stroke();
+    ctx.closePath();
+
+    ///////绘制折线
+    var Yarr=[];
+    ctx.beginPath();
+    ctx.moveTo(10,500);
+    for(let i=0;i<len;i++)
+    {
+        x=data[i].x+10;
+        y=500-data[i].y;
+        Yarr.push(data[i].y);
+        ctx.lineTo(x,y);//绘制折线
+        ctx.strokeStyle="#B18CFF";
+        ctx.fillStyle='#B18CFF';
+        ctx.fillRect(x-2.5,y-2.5,5,5);//创建每个点的小方点
+    }
+    ctx.stroke();
+    ctx.closePath();
+
+    var MaxY = Math.max.apply(Math, Yarr);
+    var MaxX=0;
+    for(let i=0;i<len;i++)
+    {
+        if(data[i].y==MaxY)
+        {
+            MaxX=data[i].x;
+            ctx.beginPath();
+            x=MaxX+10;
+            y=500-MaxY;
+            ctx.moveTo(x,y);
+            ctx.strokeStyle="#394A84";
+            ctx.fillStyle="#394A84";
+            ctx.globalAlpha=0.5;
+            ctx.arc(x,y,8,0,2*Math.PI);
+            ctx.fill();
+            ctx.font="20px Arial";
+            ctx.strokeText(MaxY,x-15,y-15);//绘制最高点的圆
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+        }
+    }
+
+    ctx.fillStyle="#394A84";
+    ctx.fillRect(560,0,50,50);
+    let image=new Image();
+    ctx.globalAlpha=1;
+    image.onload=function(){
+        ctx.drawImage(image,560,0,50,50);
+    };
+    image.src="sun.png";
+   </script>
+
+</html>
